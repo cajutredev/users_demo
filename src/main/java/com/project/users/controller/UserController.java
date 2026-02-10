@@ -27,21 +27,21 @@ public class UserController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<User> findById(@PathVariable String id) {
+    public ResponseEntity<User> findById(@PathVariable Long id) {
         return userService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
+    public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
         return userService.updateUser(user)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+            ? ResponseEntity.ok(true)
+            : ResponseEntity.notFound().build();
     }
 }
