@@ -2,6 +2,7 @@ package com.project.users.controller;
 
 import com.project.users.entity.User;
 import com.project.users.service.UserService;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@NoArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
