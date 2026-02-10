@@ -3,28 +3,45 @@ package com.project.users.controller;
 import com.project.users.entity.User;
 import com.project.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/api/users")
-    public List<User> getUsers() {
-        return userService.getUsers();
+    @GetMapping
+    //@RequestMapping(value = "/api/users", method = RequestMethod.GET)
+    public ResponseEntity<List<User>> getUsers() {
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        //return ResponseEntity.ok(userService.getUsers());
+        //return userService.getUsers();
     }
 
-    @PostMapping("/api/users")
-    public List<User> createUser(@RequestBody User user) {
-        userService.createUser(user);
-        return userService.getUsers();
+    @GetMapping("{id}")
+    public ResponseEntity<User> findById(@PathVariable String id) {
+        return userService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.createUser(user));
+    }
+
+    @PutMapping
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        return userService.updateUser(user)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
