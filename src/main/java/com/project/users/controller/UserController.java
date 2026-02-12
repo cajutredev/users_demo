@@ -1,5 +1,6 @@
 package com.project.users.controller;
 
+import com.project.users.dto.UserDto;
 import com.project.users.entity.User;
 import com.project.users.service.UserService;
 import lombok.NoArgsConstructor;
@@ -8,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @NoArgsConstructor
@@ -21,28 +20,23 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    //@RequestMapping(value = "/api/users", method = RequestMethod.GET)
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserDto>> getUsers() {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
-        //return ResponseEntity.ok(userService.getUsers());
-        //return userService.getUsers();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        return userService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.createUser(userDto));
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
-        return userService.updateUser(user)
+    public ResponseEntity<Boolean> updateUser(@RequestBody UserDto userDto) {
+        return userService.updateUser(userDto)
             ? ResponseEntity.ok(true)
             : ResponseEntity.notFound().build();
     }

@@ -1,7 +1,9 @@
 package com.project.users.service;
 
+import com.project.users.dto.UserDto;
 import com.project.users.entity.User;
 import com.project.users.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,44 +11,53 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
-    private List<User> users = new ArrayList<User>();
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getUsers() {
+
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
     }
 
-    public User createUser(User user) {
+    public UserDto createUser(UserDto userDto) {
 //        user.setId(UUID.randomUUID().toString().split("-")[0]);
 //        users.add(user);
-        return userRepository.save(user);
+
+        User user = userRepository.save(modelMapper.map(userDto, User.class));
+        return modelMapper.map(user, UserDto.class);
     }
 
-    public Optional<User> findById(Long id) {
-//        return users.stream()
-//                .filter(user -> user.getId().equals(id))
-//                .findFirst();
-        return userRepository.findById(id);
+    public UserDto findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+
+        return modelMapper.map(user, UserDto.class);
     }
 
-    public Boolean updateUser(User user) {
+    public Boolean updateUser(UserDto userDto) {
 //        return users.stream()
-//                .filter(u -> u.getId().equals(user.getId()))
+//                .filter(u -> u.getId().equals(userDto.getId()))
 //                .findFirst()
 //                .map(user1 -> {
-//                    user1.setFirstName(user.getFirstName());
-//                    user1.setLastName(user.getLastName());
+//                    user1.setFirstName(userDto.getFirstName());
+//                    user1.setLastName(userDto.getLastName());
 //                    return user1;
 //                });
-        return userRepository.findById(user.getId())
+        return userRepository.findById(userDto.getId())
                 .map(user1 -> {
-                    user1.setLastName(user.getLastName());
-                    user1.setFirstName(user.getFirstName());
+                        modelMapper.map(userDto, user1);
+//                    user1.setLastName(userDto.getLastName());
+//                    user1.setFirstName(userDto.getFirstName());
                     userRepository.save(user1);
                     return true;
                 }).orElse(false);
