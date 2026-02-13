@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,7 +21,7 @@ public class Product {
     @Column
     private String productDescription;
     @Column
-    private String productPrice;
+    private BigDecimal productPrice;
     @Column
     private Integer stock;
     @Column
