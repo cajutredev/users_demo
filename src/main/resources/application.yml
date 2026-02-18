@@ -7,3 +7,21 @@ spring:
       enabled: true
   datasource:
     url: jdbc:h2:mem:test
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: ecomerce
+    description: App built by us
+    version: 1.0.0
