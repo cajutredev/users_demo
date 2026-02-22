@@ -2,23 +2,43 @@
 spring:
   application:
     name: users
-  h2:
-    console:
-      enabled: true
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:postgresql://localhost:5432/users_demo
+    username: embarkx
+    password: embarkx
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#  h2:
+#    console:
+#      enabled: true
+#  datasource:
+#    url: jdbc:h2:mem:test
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: create
 
 management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        #include: '*'
+        include: beans, health
   endpoint:
     health:
       show-details: always
+    shutdown:
+      enabled: true
   info:
     env:
       enabled: true
+
+server:
+  shutdown: graceful
 
 info:
   app:
